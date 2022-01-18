@@ -11,9 +11,19 @@ function connectSocket(event){
         chatElement.classList.remove('dis');  // remove class dis from chatElement
         var socket = new SockJS("/connect");   // connect path is from backEnd to open a connection between client and backend
         stomp = Stomp.over(socket); // make connection via socket
+        stomp.connect({},connectedDone);
     }
     event.preventDefault();
 }
 
+
+function connectedDone(){
+    stomp.subscribe("/app/chat.send",sendMessage)
+    stomp.send("/app/chat.login",{},JSON.stringify({sender:userName, chatType:'JOIN'}));
+}
+
+function sendMessage(){
+
+}
 
 userForm.addEventListener('submit',connectSocket); // when you submit let's connectSocket method work
