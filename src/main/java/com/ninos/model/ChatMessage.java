@@ -6,6 +6,7 @@ public class ChatMessage {
     private String sender;
     private ChatType chatType;
 
+
     public ChatMessage() {
     }
 
