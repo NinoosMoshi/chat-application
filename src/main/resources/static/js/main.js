@@ -29,16 +29,19 @@ function connectedDone(){
 function sendMessage(payload){
    var message = JSON.parse(payload.body);
    if (message.chatType == 'JOIN'){
-       joinMessage(message);
+       joinMessage(message, "join");
+   }
+   else if (message.chatType == 'OFFLINE'){
+       joinMessage(message, "offline");
    }
 }
 
-function joinMessage(message){
+function joinMessage(message, state){
     var li1 = document.createElement('li');
     var li2 = document.createElement('li');
     var hr1 = document.createElement('hr');
     var hr2 = document.createElement('hr');
-    var messageJoin = document.createTextNode(message.sender + ' join');
+    var messageJoin = document.createTextNode(message.sender+ " " + state);
     li1.classList.add('status');
     li1.appendChild(messageJoin);
     li2.appendChild(hr1);

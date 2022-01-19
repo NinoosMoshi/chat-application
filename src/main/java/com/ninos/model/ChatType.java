@@ -1,5 +1,5 @@
 package com.ninos.model;
 
 public enum ChatType {
-    JOIN,LEAVE,PRESENT
+    JOIN,OFFLINE,ONLINE
 }
