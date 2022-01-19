@@ -1,6 +1,8 @@
 var loginElement = document.querySelector('#login');   // get the element(div) all
 var chatElement = document.querySelector('#chat');
 var userForm = document.querySelector('#userForm');
+var connect = document.querySelector('#connect');
+var mainChat = document.querySelector('#main-chat');
 var userName= null;
 var stomp = null;
 var URL = "http://localhost:8080"
@@ -19,12 +21,30 @@ function connectSocket(event){
 
 
 function connectedDone(){
+    stomp.subscribe("/topic/all",sendMessage);
     stomp.send("/app/chat.login",{},JSON.stringify({sender:userName, chatType:'JOIN'}));
-    stomp.subscribe("/app/chat.send",sendMessage);
+    connect.classList.add('dis');
 }
 
-function sendMessage(){
+function sendMessage(payload){
+   var message = JSON.parse(payload.body);
+   if (message.chatType == 'JOIN'){
+       joinMessage(message);
+   }
+}
 
+function joinMessage(message){
+    var li1 = document.createElement('li');
+    var li2 = document.createElement('li');
+    var hr1 = document.createElement('hr');
+    var hr2 = document.createElement('hr');
+    var messageJoin = document.createTextNode(message.sender + ' join');
+    li1.classList.add('status');
+    li1.appendChild(messageJoin);
+    li2.appendChild(hr1);
+    li2.appendChild(li1);
+    li2.appendChild(hr2);
+    mainChat.appendChild(li2);
 }
 
 userForm.addEventListener('submit',connectSocket); // when you submit let's connectSocket method work
