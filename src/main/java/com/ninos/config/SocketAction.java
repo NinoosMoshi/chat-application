@@ -2,6 +2,7 @@ package com.ninos.config;
 
 import com.ninos.model.ChatMessage;
 import com.ninos.model.ChatType;
+import com.ninos.model.Storage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -30,6 +31,7 @@ public class SocketAction {
             ChatMessage chatMessage = new ChatMessage();
             chatMessage.setChatType(ChatType.OFFLINE);
             chatMessage.setSender(userName);
+            Storage.removeBySession(headerAccessor.getSessionId());
             messagingTemplate.convertAndSend("/topic/all",chatMessage);
         }
     }

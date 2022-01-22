@@ -30,10 +30,10 @@ function connectedDone(){
 function sendMessage(payload){
    var message = JSON.parse(payload.body);
    if (message.chatType == 'JOIN'){
-       joinUser(message, "join");
+       joinUser(message, "JOIN");
    }
    else if (message.chatType == 'OFFLINE'){
-       joinUser(message, "offline");
+       joinUser(message, "OFFLINE");
    }
    else {
        var li = document.createElement('li');
