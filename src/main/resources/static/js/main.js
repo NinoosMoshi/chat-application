@@ -4,6 +4,7 @@ var userForm = document.querySelector('#userForm');
 var connect = document.querySelector('#connect');
 var mainChat = document.querySelector('#main-chat');
 var sendDiv = document.querySelector('#sendDiv');
+var userOnline = document.querySelector('#online');
 var userName= null;
 var stomp = null;
 var URL = "http://localhost:8080"
@@ -13,6 +14,7 @@ function connectSocket(event){
     if (userName){   // if there is a value in userName
         loginElement.classList.add('dis'); // put dis class inside this element(dis class use to disappear)
         chatElement.classList.remove('dis');  // remove class dis from chatElement
+        userOnline.classList.remove('dis');
         var socket = new SockJS(URL + '/connect');   // connect path is from backEnd to open a connection between client and backend
         stomp = Stomp.over(socket); // make connection via socket
         stomp.connect({},connectedDone);
@@ -31,9 +33,11 @@ function sendMessage(payload){
    var message = JSON.parse(payload.body);
    if (message.chatType == 'JOIN'){
        joinUser(message, "JOIN");
+       listActiveUsers();
    }
    else if (message.chatType == 'OFFLINE'){
        joinUser(message, "OFFLINE");
+       listActiveUsers();
    }
    else {
        var li = document.createElement('li');
@@ -87,6 +91,19 @@ function send(){
         stomp.send("/app/chat.send",{},JSON.stringify(userMessage))
         document.querySelector('#sms').value = '';
     }
+}
+
+function listActiveUsers(){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", URL + "/active");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function (){
+        if (xhr.readyState === 4 && xhr.status === 200){
+            var json = JSON.parse(xhr.responseText);
+            console.log(json)
+        }
+    };
+    xhr.send();
 }
 
 userForm.addEventListener('submit',connectSocket); // when you submit let's connectSocket method work
